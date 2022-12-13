@@ -1,3 +1,11 @@
 # Backprop Irises - Work in progress
 
-The following repository contains the code for an implementation of the backpropagation algorithm for neural networks, and is meant purely for educational purposes. It implements a neural network, and trains it on the iris dataset from [UCI](https://archive.ics.uci.edu/ml/datasets/Iris). The dataset is also available in the [`data` -folder](./data) of the repo for simpler running of the notebook. Alongside the data, the notebook itself is [`ANN.ipynb`](ANN.ipynb) and the used thirdparty libs required for running the notebook stored in [requirements.txt](requirements.txt). 
+The following repository contains the code for a framework to create neural networks using back propagation, and is meant purely for educational purposes.
+
+The main code for the framework is available in [`ANN.py`](./ANN.py), with necessary helper-functions stored in [`helpers.py`](./helpers.py). A notebook featuring implementation of a model, which is then trained on the iris dataset from [UCI](https://archive.ics.uci.edu/ml/datasets/Iris) is available at [`ANN.ipynb`](./ANN.ipynb). Further, an experiment in relation to the specialization project this framework has been implemented is available at [`Experiment.py`](./Experiment.py) where ten agents are trained and tested on the same iris dataset.
+
+Lastly, all necessary 3rd-party libs are available in [requirements.txt](./requirements.txt) and can be installed using 
+
+```sh
+pip install -r ./requirements.txt
+```
