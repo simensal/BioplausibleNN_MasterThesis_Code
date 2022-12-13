@@ -1,4 +1,4 @@
-# Backprop Irises - Work in progress
+# Backprop Irises
 
 The following repository contains the code for a framework to create neural networks using back propagation, and is meant purely for educational purposes.
 
