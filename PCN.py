@@ -55,7 +55,7 @@ class PCN(learner):
 
         returns: (bool) True if converged, False otherwise
         """
-        return np.array_equal(prev_pred, new_pred) # TODO: Update so that it is approximately equal
+        return np.allclose(prev_pred, new_pred, atol=1e-3)
 
     def __predict__(self, sample, max_iter=self.max_iter):
         """
