@@ -1,6 +1,6 @@
 import numpy as np
 
-from helpers import activation, der_activation
+from helpers import activation, der_activation, normalize
 from learner import learner
 
 class PCN(learner): 
@@ -39,57 +39,68 @@ class PCN(learner):
             else:
                 self.weights.append(np.random.rand(self.hidden_layers[i-1], self.hidden_layers[i]))
 
-        # Creating variance matrix
+        # Creating variances for error layers
         self.variance_matrix = []
         for i in range(self.num_layers - 1):
-            if i == 0:
-                self.variance_matrix.append(np.ones((self.num_features, self.hidden_layers[i])))
-            elif i == self.num_layers - 2:
-                self.variance_matrix.append(np.ones((self.hidden_layers[i-1], self.num_outputs)))
+            if i == self.num_layers - 2:
+                self.variance_matrix.append(np.ones((self.num_outputs)))
             else:
-                self.variance_matrix.append(np.ones((self.hidden_layers[i-1], self.hidden_layers[i])))
+                self.variance_matrix.append(np.ones((self.hidden_layers[i])))
 
-    def __check_convergence__(self, prev_pred, new_pred):
+    def __check_convergence__(self, prev_state, curr_state):
         """
-        Checks if the prediction has converged
+        Checks if the state of the network has converged within given tolerance
 
         returns: (bool) True if converged, False otherwise
         """
-        return np.allclose(prev_pred, new_pred, atol=1e-3)
+        for i in range(self.num_layers):
+            if not np.allclose(prev_state[i], curr_state[i], atol=1e-3):
+                return False
+        return True
 
-    def __predict__(self, sample, max_iter=self.max_iter):
+    def __predict__(self, sample, max_iter=None):
         """
         Take a sample as input and converges to fixed point equilibrium
 
         returns: (ndarray) predicted output to the given input sample
         """
 
-        # Set input layer equal to the provided sample
+        if max_iter is None:
+            max_iter = self.max_iter
+
+        # Set input layer equal to the normalized input sample
         self.layers[0] = sample
 
         # Converge towards equilibrium state
         t = 0
-        curr_pred = np.zeros(self.num_outputs)
+        # curr_pred = np.zeros(self.num_outputs)
+        curr_state = self.layers
         while True:
             t += 1
-
-            # Convergence condition
-            if self.__check_convergence__(curr_pred, self.layers[-1]) or t < max_iter:
-                break
 
             # Perform iteration
             for i in range(self.num_layers - 1):
 
                 # Update error layer
-                self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(self.layers[i], self.weights[i])), self.variance_matrix[i])
+                # self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(self.layers[i], self.weights[i])), self.variance_matrix[i])
+                self.error_layers[i] = np.divide((self.layers[i+1] - activation(np.dot(self.layers[i], self.weights[i]))), self.variance_matrix[i])
                 
                 # Update activation layer based on autoerror and upstream error
-                self.layers[i+1] = -self.error_layers[i] + np.dot(self.error_layers[i+1], self.weights[i].T) * der_activation(self.layers[i+1])
-                
-            # Update current prediction
-            curr_pred = self.layers[-1]
+                if i == len(self.layers) - 2: # Output layer
+                    self.layers[i+1] = -self.error_layers[i]
+                else: # Intermediary layers
+                    self.layers[i+1] = -self.error_layers[i] + np.dot(self.error_layers[i+1], self.weights[i+1].T) * der_activation(self.layers[i+1])
+                    
+            
+            # Convergence condition
+            if self.__check_convergence__(curr_state, self.layers) or t >= max_iter:
+                break
 
-        return curr_pred
+            # Update current prediction
+            # curr_pred = self.layers[-1]
+            curr_state = self.layers
+
+        return self.layers[-1]
 
         # for layer in self.layers: # <--- should probably be some while-loop
             # Update error nodes according to eq 2.17 in (Whittington, Bogacz - 2017)
@@ -106,18 +117,20 @@ class PCN(learner):
         """
         Train the network based on the provided samples and solutions
         """
-        
+        # Normalize samples
+        samples = normalize(samples)
+
         # Loop over all samples and learn from sample
         for sample, solution in zip(samples, solutions): 
             # Clamp output and input
             self.layers[-1] = solution
-            self.predict(sample)
+            self.__predict__(sample)
 
             
             # Update weights based on residual error in network after convergence (eq. 2.19 in (Whittington, Bogacz - 2017)))
             for i in range(self.num_layers - 1):
-                activations = self.layers[i]
+                activations = self.layers[i+1]
                 errors = self.error_layers[i]
-                self.weight[i] = self.weights[i] + self.learning_rate * np.dot(activations.T, errors)
+                self.weights[i] = self.weights[i] + self.learning_rate * np.dot(activations.T, errors)
 
         return self

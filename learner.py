@@ -1,6 +1,6 @@
 import numpy as np
 
-from helpers import activation, der_activation
+from helpers import activation, der_activation, normalize
 
 class learner:
 
@@ -11,8 +11,17 @@ class learner:
         self.hidden_layers = hidden_layers
         self.learning_rate = learning_rate
 
+    def __predict__(self, sample):
+        """
+        Predicts the output of a sample
+        Takes as input a sample and returns the output of the network as ndarray
+        """
+        pass
+
     def reset(self):
-        """Resets the learner to the state at initialization"""
+        """
+        Resets the learner to the state at initialization
+        """
         self.__init__(self.num_features, self.hidden_layers, self.num_outputs, self.learning_rate)
 
     def train():
@@ -22,13 +31,22 @@ class learner:
         """
         Test the learner on a set of samples and solutions
         """
+        # Normalize dataset
+        samples = normalize(samples)
+
+        # Setting up lists for predictions and errors
         predictions = []
+        error = []
+
+        # Predicting and calculating error
         for sample, solution in zip(samples, solutions):
-            prediction = self.predict(sample)
+            prediction = self.__predict__(sample)
+            print("Prediction: ", prediction)
             predictions.append(prediction)
-        
+            error.append(np.sum(np.square(solution - prediction)))
+
         # Calculate accuracy
-        accuracy = np.mean(np.equal(predictions, solutions))
+        accuracy = np.divide(np.equal(np.argmax(predictions), np.argmax(solutions)), len(solutions))
         return predictions, accuracy
 
     
