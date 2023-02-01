@@ -41,9 +41,12 @@ class learner:
         # Predicting and calculating error
         for sample, solution in zip(samples, solutions):
             prediction = self.__predict__(sample)
-            print("Prediction: ", prediction)
+            print("Prediction: ", prediction, end="  ")
+            print("Solution: ", solution)
             predictions.append(prediction)
             error.append(np.sum(np.square(solution - prediction)))
+
+        print("Mean error: ", np.mean(error))
 
         # Calculate accuracy
         accuracy = np.divide(np.equal(np.argmax(predictions), np.argmax(solutions)), len(solutions))

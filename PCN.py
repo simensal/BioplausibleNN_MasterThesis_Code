@@ -43,9 +43,9 @@ class PCN(learner):
         self.variance_matrix = []
         for i in range(self.num_layers - 1):
             if i == self.num_layers - 2:
-                self.variance_matrix.append(np.ones((self.num_outputs)))
+                self.variance_matrix.append(np.ones((self.num_outputs))*8)
             else:
-                self.variance_matrix.append(np.ones((self.hidden_layers[i])))
+                self.variance_matrix.append(np.ones((self.hidden_layers[i]))*8)
 
     def __check_convergence__(self, prev_state, curr_state):
         """
@@ -58,7 +58,7 @@ class PCN(learner):
                 return False
         return True
 
-    def __predict__(self, sample, max_iter=None):
+    def __predict__(self, sample, max_iter=None, output_clamped=False):
         """
         Take a sample as input and converges to fixed point equilibrium
 
@@ -74,7 +74,7 @@ class PCN(learner):
         # Converge towards equilibrium state
         t = 0
         # curr_pred = np.zeros(self.num_outputs)
-        curr_state = self.layers
+        curr_state = self.layers.copy()
         while True:
             t += 1
 
@@ -82,14 +82,15 @@ class PCN(learner):
             for i in range(self.num_layers - 1):
 
                 # Update error layer
-                # self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(self.layers[i], self.weights[i])), self.variance_matrix[i])
+                # self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(activation(self.layers[i]), self.weights[i])), self.variance_matrix[i])
                 self.error_layers[i] = np.divide((self.layers[i+1] - activation(np.dot(self.layers[i], self.weights[i]))), self.variance_matrix[i])
                 
                 # Update activation layer based on autoerror and upstream error
                 if i == len(self.layers) - 2: # Output layer
-                    self.layers[i+1] = -self.error_layers[i]
+                    if not output_clamped:
+                        self.layers[i+1] = self.layers[i+1] -self.error_layers[i]
                 else: # Intermediary layers
-                    self.layers[i+1] = -self.error_layers[i] + np.dot(self.error_layers[i+1], self.weights[i+1].T) * der_activation(self.layers[i+1])
+                    self.layers[i+1] = self.layers[i+1] -self.error_layers[i] + np.dot(self.error_layers[i+1], self.weights[i+1].T) * der_activation(self.layers[i+1])
                     
             
             # Convergence condition
@@ -98,7 +99,7 @@ class PCN(learner):
 
             # Update current prediction
             # curr_pred = self.layers[-1]
-            curr_state = self.layers
+            curr_state = self.layers.copy()
 
         return self.layers[-1]
 
@@ -124,13 +125,15 @@ class PCN(learner):
         for sample, solution in zip(samples, solutions): 
             # Clamp output and input
             self.layers[-1] = solution
-            self.__predict__(sample)
+            self.__predict__(sample, output_clamped=True)
 
             
             # Update weights based on residual error in network after convergence (eq. 2.19 in (Whittington, Bogacz - 2017)))
             for i in range(self.num_layers - 1):
-                activations = self.layers[i+1]
+                # activations = self.layers[i+1]
+                activations = self.layers[i]
                 errors = self.error_layers[i]
-                self.weights[i] = self.weights[i] + self.learning_rate * np.dot(activations.T, errors)
+                # self.weights[i] = self.weights[i] + self.learning_rate * np.dot(activations.T, errors) # This is wrong, should be outer product of activations and errors
+                self.weights[i] = self.weights[i] + self.learning_rate * np.outer(activations, errors) # This is wrong, should be outer product of activations and errors
 
         return self
