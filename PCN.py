@@ -73,7 +73,6 @@ class PCN(learner):
 
         # Converge towards equilibrium state
         t = 0
-        # curr_pred = np.zeros(self.num_outputs)
         curr_state = self.layers.copy()
         while True:
             t += 1
@@ -82,8 +81,8 @@ class PCN(learner):
             for i in range(self.num_layers - 1):
 
                 # Update error layer
-                # self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(activation(self.layers[i]), self.weights[i])), self.variance_matrix[i])
-                self.error_layers[i] = np.divide((self.layers[i+1] - activation(np.dot(self.layers[i], self.weights[i]))), self.variance_matrix[i])
+                self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(activation(self.layers[i]), self.weights[i])), self.variance_matrix[i])
+                # self.error_layers[i] = np.divide((self.layers[i+1] - activation(np.dot(self.layers[i], self.weights[i]))), self.variance_matrix[i])
                 
                 # Update activation layer based on autoerror and upstream error
                 if i == len(self.layers) - 2: # Output layer
@@ -98,21 +97,10 @@ class PCN(learner):
                 break
 
             # Update current prediction
-            # curr_pred = self.layers[-1]
             curr_state = self.layers.copy()
 
         return self.layers[-1]
 
-        # for layer in self.layers: # <--- should probably be some while-loop
-            # Update error nodes according to eq 2.17 in (Whittington, Bogacz - 2017)
-            # upstream_predictions = self.layers[i+1] <- Have to rework this somehow to get prediction of upstream
-            # activations = layer[0]
-            # errors = layer[1]
-            # errors = np.divide((activations - upstream_predictions), self.variances)
-
-            # Update activation node based on eq. 2.18 in (Whittington, Bogacz - 2017)
-            # activations = -errors + sum(upstream_errors * self.weights[i,j] * der_activation(activations))
-        
 
     def train(self, samples, solutions):
         """
@@ -133,7 +121,6 @@ class PCN(learner):
                 # activations = self.layers[i+1]
                 activations = self.layers[i]
                 errors = self.error_layers[i]
-                # self.weights[i] = self.weights[i] + self.learning_rate * np.dot(activations.T, errors) # This is wrong, should be outer product of activations and errors
-                self.weights[i] = self.weights[i] + self.learning_rate * np.outer(activations, errors) # This is wrong, should be outer product of activations and errors
+                self.weights[i] = self.weights[i] + self.learning_rate * np.outer(activations, errors)
 
         return self

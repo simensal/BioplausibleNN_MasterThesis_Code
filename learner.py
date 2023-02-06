@@ -1,6 +1,6 @@
 import numpy as np
 
-from helpers import activation, der_activation, normalize
+from helpers import activation, der_activation, normalize, MSE
 
 class learner:
 
@@ -27,7 +27,7 @@ class learner:
     def train():
         pass
 
-    def test(self, samples, solutions):
+    def test(self, samples, solutions, verbose = False):
         """
         Test the learner on a set of samples and solutions
         """
@@ -41,15 +41,14 @@ class learner:
         # Predicting and calculating error
         for sample, solution in zip(samples, solutions):
             prediction = self.__predict__(sample)
-            print("Prediction: ", prediction, end="  ")
-            print("Solution: ", solution)
+            if verbose:
+                print("Prediction: ", prediction, end="  ")
+                print("Solution: ", solution)
             predictions.append(prediction)
-            error.append(np.sum(np.square(solution - prediction)))
-
-        print("Mean error: ", np.mean(error))
+            error.append(np.sum(np.square(solution - prediction))) # Change this to use MSE
 
         # Calculate accuracy
-        accuracy = np.divide(np.equal(np.argmax(predictions), np.argmax(solutions)), len(solutions))
-        return predictions, accuracy
+        accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(solutions, axis=1)).sum(), len(solutions))
+        return predictions, accuracy, error
 
     
