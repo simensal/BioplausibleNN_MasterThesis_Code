@@ -11,28 +11,29 @@ class learner:
         self.hidden_layers = hidden_layers
         self.learning_rate = learning_rate
 
-    def __predict__(self, sample):
+    def __predict__(self, sample) -> np.ndarray:
         """
         Predicts the output of a sample
         Takes as input a sample and returns the output of the network as ndarray
         """
         pass
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Resets the learner to the state at initialization
         """
         self.__init__(self.num_features, self.hidden_layers, self.num_outputs, self.learning_rate)
 
-    def train():
+    def train() -> None:
         pass
 
-    def test(self, samples, solutions, verbose = False):
+    def test(self, samples, solutions, verbose = False, normalize_inputs = True) -> tuple:
         """
         Test the learner on a set of samples and solutions
         """
         # Normalize dataset
-        samples = normalize(samples)
+        if normalize_inputs:
+            samples = normalize(samples)
 
         # Setting up lists for predictions and errors
         predictions = []
