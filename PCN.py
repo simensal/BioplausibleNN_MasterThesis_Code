@@ -5,9 +5,11 @@ from learner import learner
 
 
 class PCN(learner):
-    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, max_iter=1000):
+    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, max_iter=1000, activation=activation, der_activation=der_activation, normalize_function=normalize):
         super().__init__(features=features, hidden_layers=hidden_layers,
-                         outputs=outputs, learning_rate=learning_rate)
+                         outputs=outputs, learning_rate=learning_rate,
+                         activation=activation, der_activation=der_activation,
+                         normalize_function=normalize_function)
 
         self.variances = 1
         self.max_iter = max_iter

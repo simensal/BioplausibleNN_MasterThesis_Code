@@ -1,10 +1,10 @@
 import numpy as np
 from learner import learner
-from helpers import activation, der_activation
+from helpers import activation, der_activation, normalize
 
 
 class ANN(learner):
-    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01) -> None:
+    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, activation=activation, der_activation=der_activation, normalize_function=normalize) -> None:
         """
         Takes as input
             hidden_layers : 1d array with number of neurons to include in each of the hidden layers
@@ -13,7 +13,10 @@ class ANN(learner):
         """
 
         super().__init__(features=features, hidden_layers=hidden_layers,
-                         outputs=outputs, learning_rate=learning_rate)
+                         outputs=outputs, learning_rate=learning_rate,
+                         activation=activation, der_activation=der_activation,
+                         normalize_function=normalize_function
+                         )
 
         combined_layers = np.array([features] + hidden_layers + [outputs])
 

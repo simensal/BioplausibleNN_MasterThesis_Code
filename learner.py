@@ -5,12 +5,16 @@ from helpers import activation, der_activation, normalize, MSE
 
 class learner:
 
-    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01) -> None:
+    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, activation=activation, der_activation=der_activation, normalize_function=normalize) -> None:
         self.num_features = features
         self.num_outputs = outputs
         self.num_layers = len(hidden_layers) + 2
         self.hidden_layers = hidden_layers
         self.learning_rate = learning_rate
+
+        self.activation = activation
+        self.der_activation = der_activation
+        self.normalize = normalize_function
 
     def __predict__(self, sample) -> np.ndarray:
         """

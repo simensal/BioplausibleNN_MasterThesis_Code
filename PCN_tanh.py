@@ -7,11 +7,9 @@ from learner import learner
 class PCN(learner):
     def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, max_iter=1000, activation=tanh, der_activation=der_tanh, normalize_function=normalize_tanh):
         super().__init__(features=features, hidden_layers=hidden_layers,
-                         outputs=outputs, learning_rate=learning_rate)
-
-        self.activation = activation
-        self.der_activation = der_activation
-        self.normalize = normalize_function
+                         outputs=outputs, learning_rate=learning_rate,
+                         activation=activation, der_activation=der_activation,
+                         normalize_function=normalize_function)
 
         self.variances = 1
         self.max_iter = max_iter
