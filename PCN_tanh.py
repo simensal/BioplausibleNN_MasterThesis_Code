@@ -128,9 +128,11 @@ class PCN(learner):
             # Update weights based on residual error in network after convergence (eq. 2.19 in (Whittington, Bogacz - 2017)))
             for i in range(self.num_layers - 1):
                 self.weights[i] = self.weights[i] + \
-                    self.learning_rate * np.outer(self.activation(self.layers[i]), self.error_layers[i])
+                    self.learning_rate * \
+                    np.outer(self.activation(
+                        self.layers[i]), self.error_layers[i])
 
-    def test(self, samples, solutions, verbose = False, normalize_inputs = True) -> tuple:
+    def test(self, samples, solutions, verbose=False, normalize_inputs=True) -> tuple:
         """
         Test the learner on a set of samples and solutions
         """
@@ -149,8 +151,10 @@ class PCN(learner):
                 print("Prediction: ", prediction, end="  ")
                 print("Solution: ", solution)
             predictions.append(prediction)
-            error.append(np.sum(np.square(solution - prediction))) # Change this to use MSE
+            # Change this to use MSE
+            error.append(np.sum(np.square(solution - prediction)))
 
         # Calculate accuracy
-        accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(solutions, axis=1)).sum(), len(solutions))
+        accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(
+            solutions, axis=1)).sum(), len(solutions))
         return predictions, accuracy, error

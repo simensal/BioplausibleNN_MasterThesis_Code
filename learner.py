@@ -2,12 +2,13 @@ import numpy as np
 
 from helpers import activation, der_activation, normalize, MSE
 
+
 class learner:
 
     def __init__(self, features, hidden_layers, outputs, learning_rate=0.01) -> None:
         self.num_features = features
         self.num_outputs = outputs
-        self.num_layers = len(hidden_layers) + 2 
+        self.num_layers = len(hidden_layers) + 2
         self.hidden_layers = hidden_layers
         self.learning_rate = learning_rate
 
@@ -22,12 +23,13 @@ class learner:
         """
         Resets the learner to the state at initialization
         """
-        self.__init__(self.num_features, self.hidden_layers, self.num_outputs, self.learning_rate)
+        self.__init__(self.num_features, self.hidden_layers,
+                      self.num_outputs, self.learning_rate)
 
     def train() -> None:
         pass
 
-    def test(self, samples, solutions, verbose = False, normalize_inputs = True) -> tuple:
+    def test(self, samples, solutions, verbose=False, normalize_inputs=True) -> tuple:
         """
         Test the learner on a set of samples and solutions
         """
@@ -46,10 +48,10 @@ class learner:
                 print("Prediction: ", prediction, end="  ")
                 print("Solution: ", solution)
             predictions.append(prediction)
-            error.append(np.sum(np.square(solution - prediction))) # Change this to use MSE
+            # Change this to use MSE
+            error.append(np.sum(np.square(solution - prediction)))
 
         # Calculate accuracy
-        accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(solutions, axis=1)).sum(), len(solutions))
+        accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(
+            solutions, axis=1)).sum(), len(solutions))
         return predictions, accuracy, error
-
-    
