@@ -1,8 +1,9 @@
-from ANN import ANN
+from deprecated.ANN_deprecated import ANN
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from plyer import notification
+from helpers import get_iris_data
 
 epochs = 1000
 sample_interval = 50
@@ -10,22 +11,7 @@ sample_interval = 50
 if __name__ == "__main__":
 
     # Load data from iris and create training and test sets
-    iris = pd.read_csv('./data/iris.data', names=['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'label']).sample(frac=1)
-    y = iris['label']
-    X = iris.drop('label', axis=1)
-
-    # Converting labels from string to int
-    y = y.replace({'Iris-setosa': 0, 'Iris-versicolor': 1, 'Iris-virginica': 2})
-
-    # Splitting the data into training and test sets
-    X_train = X.iloc[:110].to_numpy()
-    X_test = X.iloc[110:].to_numpy()
-    y_train = y.iloc[:110]
-    y_test = y.iloc[110:]
-
-    # Converting the labels to one-hot encoding
-    y_train = pd.get_dummies(y_train).values
-    y_test = pd.get_dummies(y_test).values
+    X_train, X_test, y_train, y_test = get_iris_data()
 
 
     # Setting up ten agents of ANN
