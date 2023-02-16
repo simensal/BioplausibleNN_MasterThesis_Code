@@ -5,7 +5,7 @@ from learner import learner
 
 
 class PCN(learner):
-    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, max_iter=1000, activation=tanh, der_activation=der_tanh, normalize_function=normalize_tanh):
+    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, max_iter=100, activation=tanh, der_activation=der_tanh, normalize_function=normalize_tanh, convergence_tolerance=1e-2, variance=4):
         super().__init__(features=features, hidden_layers=hidden_layers,
                          outputs=outputs, learning_rate=learning_rate,
                          activation=activation, der_activation=der_activation,
@@ -13,6 +13,7 @@ class PCN(learner):
 
         self.variances = 1
         self.max_iter = max_iter
+        self.convergence_tolerance = convergence_tolerance
 
         # Create layers with activation and error nodes
         self.layers = []
@@ -37,22 +38,24 @@ class PCN(learner):
         self.weights = []
         for i in range(self.num_layers - 1):
             if i == 0:
-                self.weights.append(np.random.rand(
-                    self.num_features, self.hidden_layers[i]))
+                self.weights.append(np.random.uniform(-0.1, 0.1, (
+                    self.num_features, self.hidden_layers[i])))
             elif i == self.num_layers - 2:
-                self.weights.append(np.random.rand(
-                    self.hidden_layers[i-1], self.num_outputs))
+                self.weights.append(np.random.uniform(-0.1, 0.1, (
+                    self.hidden_layers[i-1], self.num_outputs)))
             else:
-                self.weights.append(np.random.rand(
-                    self.hidden_layers[i-1], self.hidden_layers[i]))
+                self.weights.append(np.random.uniform(-0.1, 0.1, (
+                    self.hidden_layers[i-1], self.hidden_layers[i])))
 
         # Creating variances for error layers
         self.variance_matrix = []
         for i in range(self.num_layers - 1):
             if i == self.num_layers - 2:
-                self.variance_matrix.append(np.ones((self.num_outputs))*8)
+                self.variance_matrix.append(
+                    np.ones((self.num_outputs))*variance)
             else:
-                self.variance_matrix.append(np.ones((self.hidden_layers[i]))*8)
+                self.variance_matrix.append(
+                    np.ones((self.hidden_layers[i]))*variance)
 
     def __check_convergence__(self, prev_state, curr_state):
         """
@@ -61,7 +64,7 @@ class PCN(learner):
         returns: (bool) True if converged, False otherwise
         """
         for i in range(self.num_layers):
-            if not np.allclose(prev_state[i], curr_state[i], atol=1e-3):
+            if not np.allclose(prev_state[i], curr_state[i], atol=self.convergence_tolerance):
                 return False
         return True
 
@@ -108,20 +111,24 @@ class PCN(learner):
             # Update current prediction
             curr_state = self.layers.copy()
 
-        return self.layers[-1]
+        return self.layers[-1], t >= max_iter
 
-    def train(self, samples, solutions) -> None:
+    def train(self, samples, solutions, normalize_inputs=True) -> None:
         """
         Train the network based on the provided samples and solutions
         """
         # Normalize samples
-        samples = self.normalize(samples)
+        if normalize_inputs:
+            samples = self.normalize(samples)
+
+        exceeded_timelimit = []
 
         # Loop over all samples and learn from sample
         for sample, solution in zip(samples, solutions):
             # Clamp output and input
             self.layers[-1] = solution
-            self.__predict__(sample, output_clamped=True)
+            _, exceeded = self.__predict__(sample, output_clamped=True)
+            exceeded_timelimit.append(exceeded)
 
             # Update weights based on residual error in network after convergence (eq. 2.19 in (Whittington, Bogacz - 2017)))
             for i in range(self.num_layers - 1):
@@ -130,9 +137,19 @@ class PCN(learner):
                     np.outer(self.activation(
                         self.layers[i]), self.error_layers[i])
 
+        return exceeded_timelimit
+
     def test(self, samples, solutions, verbose=False, normalize_inputs=True) -> tuple:
         """
         Test the learner on a set of samples and solutions
+
+        Args:
+            samples: (ndarray) samples to test on
+            solutions: (ndarray) solutions to test on
+            verbose: (bool = False) print predictions and solutions
+            normalize_inputs: (bool = True) normalize inputs before testing
+
+        returns: (tuple) (predictions, accuracy, error)
         """
         # Normalize dataset
         if normalize_inputs:
@@ -141,10 +158,12 @@ class PCN(learner):
         # Setting up lists for predictions and errors
         predictions = []
         error = []
+        exceeded_timelimit = []
 
         # Predicting and calculating error
         for sample, solution in zip(samples, solutions):
-            prediction = self.__predict__(sample)
+            prediction, exceeded = self.__predict__(sample)
+            exceeded_timelimit.append(exceeded)
             if verbose:
                 print("Prediction: ", prediction, end="  ")
                 print("Solution: ", solution)
@@ -155,4 +174,48 @@ class PCN(learner):
         # Calculate accuracy
         accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(
             solutions, axis=1)).sum(), len(solutions))
-        return predictions, accuracy, error
+        return predictions, accuracy, error  # , exceeded_timelimit
+
+
+class PCN_tolerance(PCN):
+
+    def __init__(self, 
+        features:int, 
+        hidden_layers:list, 
+        outputs:int, 
+        learning_rate:float=0.01, 
+        max_iter:int=100, 
+        activation=tanh, 
+        der_activation=der_tanh, 
+        normalize_function=normalize_tanh, 
+        convergence_tolerance:float=5e-3, 
+        variance:int=4):
+        super().__init__(features=features, hidden_layers=hidden_layers,
+                         outputs=outputs, learning_rate=learning_rate,
+                            max_iter=max_iter, activation=activation,
+                            der_activation=der_activation,
+                            normalize_function=normalize_function,
+                            variance=variance,
+                            convergence_tolerance=convergence_tolerance,
+                         )
+
+    def __check_convergence__(self, prev_state, curr_state):
+        """Checks if the change in the network is smaller than the given tolerance in total percentage change of network energy
+        
+        Args:
+            prev_state: (ndarray) previous state of the network
+            curr_state: (ndarray) current state of the network
+        
+        returns: (bool) True if converged, False otherwise
+        """
+        def __get_energy__(state):
+            energy = 0
+            for i in range(self.num_layers - 1):
+                # energy += np.sum(np.square(state[i+1] - np.dot(self.activation(state[i]), self.weights[i])))
+                energy += np.sum(np.abs(state[i]))
+            return energy
+        
+        prev_energy = __get_energy__(prev_state)
+        curr_energy = __get_energy__(curr_state)
+        return np.divide(np.abs(prev_energy - curr_energy), prev_energy) < self.convergence_tolerance
+

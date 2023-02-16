@@ -32,8 +32,8 @@ class ANN(learner):
         self.weights = []
 
         for i in range(len(combined_layers)-1):
-            self.weights.append(np.random.rand(
-                combined_layers[i], combined_layers[i+1]))
+            self.weights.append(np.random.uniform(-0.1, 0.1, (
+                combined_layers[i], combined_layers[i+1])))
             self.layer_inputs.append(np.zeros(combined_layers[i]))
 
     def __predict__(self, sample) -> np.ndarray:
@@ -111,7 +111,7 @@ class ANN(learner):
             self.backprops_error(solution)
             self.update_network()
 
-    def test(self, samples, solutions, verbose=False, normalize=False) -> tuple:
+    def test(self, samples, solutions, verbose=False, normalize_inputs=False) -> tuple:
         """Test the perfomance of the network on a dataset
 
         Args:
@@ -123,4 +123,4 @@ class ANN(learner):
             predictions (ndarray(n,)) : Predictions for each sample (calculated by argmax)
         """
         self.__validate__(samples, solutions)
-        return super().test(samples, solutions, normalize_inputs=normalize, verbose=verbose)
+        return super().test(samples, solutions, normalize_inputs=normalize_inputs, verbose=verbose)

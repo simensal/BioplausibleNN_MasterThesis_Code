@@ -25,7 +25,7 @@ def der_tanh_function(x):
 
     Args:
         x (float: Scalar) :  Number representing the sum of the input to the give node"""
-    return 1 - tanh(x)**2
+    return 1 - tanh_function(x)**2
 
 
 def normalize(dataset):
@@ -65,6 +65,51 @@ def der_activation_function(x):
         x (float: Scalar) :  Number representing the sum of the input to the give node"""
     return (np.e**-x)/((1+np.e**-x)**2)
 
+def get_data(path, split=0.8, sep=',') -> tuple:
+    """Gets the data from the given path
+    
+    Args:
+        path (str): Path to the data file
+
+    Returns:
+        tuple: Training and test data sets
+    """
+
+    df = pd.read_csv(path, header=None, sep=sep).sample(frac=1)
+
+    # Splitting the data into training and test sets
+    X_train = df.iloc[:int(len(df)*split)].drop(0, axis=1).to_numpy()
+    X_test = df.iloc[int(len(df)*split):].drop(0, axis=1).to_numpy()
+    y_train = df.iloc[:int(len(df)*split)][0]
+    y_test = df.iloc[int(len(df)*split):][0]
+
+    # Converting the labels to one-hot encoding
+    y_train = pd.get_dummies(y_train).values
+    y_test = pd.get_dummies(y_test).values
+
+    return X_train, X_test, y_train, y_test
+
+def get_yeast_data():
+    """ Get the yeast data and converts it to training and test data sets
+    
+    Returns:
+        tuple: Training and test data sets (X_train, X_test, y_train, y_test)
+    """
+
+    df = pd.read_csv('./data/yeast/yeast.data', header=None, sep='\s+').sample(frac=1).drop(0, axis=1)
+
+    # Splitting the data into training and test sets
+    X_train = df.iloc[:int(len(df)*0.8)].drop(9, axis=1).to_numpy()
+    X_test = df.iloc[int(len(df)*0.8):].drop(9, axis=1).to_numpy()
+    y_train = df.iloc[:int(len(df)*0.8)][9]
+    y_test = df.iloc[int(len(df)*0.8):][9]
+
+    # Converting the labels to one-hot encoding
+    y_train = pd.get_dummies(y_train).values
+    y_test = pd.get_dummies(y_test).values
+
+    return X_train, X_test, y_train, y_test
+
 
 def get_iris_data():
     """ Get the iris data and converts it to training and test data sets
@@ -94,6 +139,27 @@ def get_iris_data():
 
     return X_train, X_test, y_train, y_test
 
+def get_mnist_data(num_samples=1000, test_split=0.2):
+    """ Get the mnist data and converts it to training and test data sets
+    
+    Returns:
+        tuple: Training and test data sets (X_train, X_test, y_train, y_test)
+    """
+
+    # Load data from mnist and create training and test sets
+    mnist = pd.read_csv('./data/mnist/mnist_train.csv')/256
+    y_train = mnist['label'][:int(num_samples*(1-test_split))]
+    X_train = mnist.drop('label', axis=1)[:int(num_samples*(1-test_split))]
+
+    # mnist = pd.read_csv('./data/mnist/mnist_test.csv')/256
+    y_test = mnist['label'][:int(num_samples*test_split)]
+    X_test = mnist.drop('label', axis=1)[:int(num_samples*test_split)]
+
+    # Converting the labels to one-hot encoding
+    y_train = pd.get_dummies(y_train).values
+    y_test = pd.get_dummies(y_test).values
+
+    return X_train, X_test, y_train, y_test
 
 tanh = np.vectorize(tanh_function)
 der_tanh = np.vectorize(der_tanh_function)
