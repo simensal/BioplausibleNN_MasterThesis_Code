@@ -30,10 +30,10 @@ class learner:
         self.__init__(self.num_features, self.hidden_layers,
                       self.num_outputs, self.learning_rate)
 
-    def train() -> None:
+    def train(self, samples, solutions, normalize_inputs=False) -> None:
         pass
 
-    def test(self, samples, solutions, verbose=False, normalize_inputs=True) -> tuple:
+    def test(self, samples, solutions, verbose=False, normalize_inputs=False) -> tuple:
         """
         Test the learner on a set of samples and solutions
         """
@@ -59,3 +59,9 @@ class learner:
         accuracy = np.divide(np.equal(np.argmax(predictions, axis=1), np.argmax(
             solutions, axis=1)).sum(), len(solutions))
         return predictions, accuracy, error
+
+    def normalize(self, samples) -> np.ndarray:
+        """
+        Normalizes the dataset
+        """
+        return self.normalize(samples)

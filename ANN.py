@@ -1,6 +1,6 @@
 import numpy as np
 from learner import learner
-from helpers import activation, der_activation, normalize
+from helpers import activation, der_activation, normalize, soft_max, der_soft_max
 
 
 class ANN(learner):
@@ -97,7 +97,7 @@ class ANN(learner):
         assert len(samples[0]) == self.num_features
         assert len(solutions[0]) == self.num_outputs
 
-    def train(self, samples, solutions) -> None:
+    def train(self, samples, solutions, normalize_inputs=False) -> None:
         """Trains the network on a set of samples and respective solutions
 
         Args:
@@ -105,6 +105,9 @@ class ANN(learner):
             solutions (ndarray(n,)): Set of respective solutions to the samples
         """
         self.__validate__(samples, solutions)
+
+        if normalize_inputs:
+            samples = self.normalize(samples)
 
         for sample, solution in zip(samples, solutions):
             self.__predict__(sample)
@@ -124,3 +127,61 @@ class ANN(learner):
         """
         self.__validate__(samples, solutions)
         return super().test(samples, solutions, normalize_inputs=normalize_inputs, verbose=verbose)
+
+
+class ANN_soft(ANN):
+    """
+    Class for a neural network using back propagation with a softmax output layer
+    """
+
+    def __init__(self, features, hidden_layers, outputs, learning_rate=0.01, activation=activation, der_activation=der_activation, normalize_function=normalize) -> None:
+        """
+        Takes as input
+            hidden_layers : 1d array with number of neurons to include in each of the hidden layers
+            features : int representing the number of features of the data set - corresponds to the first (input) layer
+            outputs : int representing the number of possible outputs - and thereby number of nodes in the final (output) layer
+        """
+
+        super().__init__(features=features, hidden_layers=hidden_layers,
+                         outputs=outputs, learning_rate=learning_rate,
+                         activation=activation, der_activation=der_activation,
+                         normalize_function=normalize_function
+                         )
+
+        # Add a layer for the softmax output
+        self.layers.append(np.zeros(outputs))
+        # Add a delta for the softmax output
+        self.deltas.append(np.zeros(outputs))
+
+    def __predict__(self, sample) -> np.ndarray:
+        """Predicts the label of a sample x
+
+        Args:
+            sample (ndarray): Array of floats which represents the first input layer of the network
+
+        Returns:
+            ndarray: Array of floats which represent the confidences of the classification for each category of the output
+        """
+        super().__predict__(sample)
+
+        # Calculate softmax output
+        self.layers[-1] = soft_max(self.layers[-2])
+
+        return self.layers[-1]
+
+    def backprops_error(self, solution) -> None:
+        """Compares a prediction to a solution and calculates the error between the layer and the expected values
+        (Propagates the deltas down the network from the output)
+
+        Args:
+            solution (ndarray): The solution to the sample fetched from the dataset
+        """
+
+        # Calculate error of output layer
+        self.deltas[-1] = np.dot(der_soft_max(self.layers[-2]), (self.layers[-1] - solution))
+        self.deltas[-2] = self.deltas[-1] # self.der_activation(self.layer_inputs[-1]) * self.deltas[-1] # Should this be a sum?
+
+        # Iterate from outputlayer backwards and propagate error
+        for i in range(len(self.weights) - 1, 0, -1):
+            self.deltas[i] = self.der_activation(
+                self.layer_inputs[i-1]) * np.dot(self.weights[i], self.deltas[i + 1])

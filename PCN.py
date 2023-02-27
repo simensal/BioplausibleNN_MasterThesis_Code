@@ -1,6 +1,6 @@
 import numpy as np
 
-from helpers import tanh, der_tanh, normalize_tanh
+from helpers import tanh, der_tanh, normalize_tanh, soft_max, der_soft_max
 from learner import learner
 
 
@@ -76,7 +76,10 @@ class PCN(learner):
         """
 
         if max_iter is None:
-            max_iter = self.max_iter
+            max_iter = self.max_iter    
+
+        output_update_mask = [not output_clamped for _ in range(self.num_outputs)]
+        # input_update_mase = [not input_clamped for _ in range(self.num_features)]
 
         # Set input layer equal to the normalized input sample
         self.layers[0] = sample
@@ -97,9 +100,8 @@ class PCN(learner):
 
                 # Update activation layer based on autoerror and upstream error
                 if i == len(self.layers) - 2:  # Output layer
-                    if not output_clamped:
-                        self.layers[i+1] = self.layers[i+1] - \
-                            self.error_layers[i]
+                    updated_values = (self.layers[i+1] - self.error_layers[i])
+                    self.layers[i+1][output_update_mask] = updated_values[output_update_mask]
                 else:  # Intermediary layers
                     self.layers[i+1] = self.layers[i+1] - self.error_layers[i] + np.dot(
                         self.error_layers[i+1], self.weights[i+1].T) * self.der_activation(self.layers[i+1])
@@ -111,7 +113,7 @@ class PCN(learner):
             # Update current prediction
             curr_state = self.layers.copy()
 
-        return self.layers[-1], t >= max_iter
+        return self.layers[-1].copy(), t >= max_iter
 
     def train(self, samples, solutions, normalize_inputs=True) -> None:
         """
@@ -126,7 +128,7 @@ class PCN(learner):
         # Loop over all samples and learn from sample
         for sample, solution in zip(samples, solutions):
             # Clamp output and input
-            self.layers[-1] = solution
+            self.layers[-1] = solution.astype(np.float64)
             _, exceeded = self.__predict__(sample, output_clamped=True)
             exceeded_timelimit.append(exceeded)
 
@@ -176,6 +178,81 @@ class PCN(learner):
             solutions, axis=1)).sum(), len(solutions))
         return predictions, accuracy, error  # , exceeded_timelimit
 
+
+class PCN_soft(PCN):
+    """PCN class with softmax layer at the end"""
+    def __init__(self, 
+        features:int, 
+        hidden_layers:list, 
+        outputs:int, 
+        learning_rate:float=0.01, 
+        max_iter:int=100, 
+        activation=tanh, 
+        der_activation=der_tanh, 
+        normalize_function=normalize_tanh, 
+        convergence_tolerance:float=5e-3, 
+        variance:int=4):
+        super().__init__(features=features, hidden_layers=hidden_layers,
+                         outputs=outputs, learning_rate=learning_rate,
+                            max_iter=max_iter, activation=activation,
+                            der_activation=der_activation,
+                            normalize_function=normalize_function,
+                            variance=variance,
+                            convergence_tolerance=convergence_tolerance,
+                         )
+
+        # TODO: Fix the new layer here for error and activation
+        self.error_layers.append(np.zeros(outputs))
+        self.layers.append(np.zeros(outputs))
+        self.weights.append(np.ones((self.num_outputs, self.num_outputs)))
+        # self.num_layers += 1
+
+    def __predict__(self, sample, max_iter=None, output_clamped=False, output_clamp = None):
+        """
+        Take a sample as input and converges to fixed point equilibrium
+
+        returns: (ndarray) predicted output to the given input sample
+        """
+
+        if max_iter is None:
+            max_iter = self.max_iter
+        if output_clamp is None:
+            output_clamp = [not output_clamped for _ in range(self.num_outputs)]
+
+        # Set input layer equal to the normalized input sample
+        self.layers[0] = sample
+
+        # Converge towards equilibrium state
+        t = 0
+        curr_state = self.layers.copy()
+        while True:
+            t += 1
+
+            # Perform iteration
+            for i in range(self.num_layers - 1):
+
+                self.error_layers[i] = np.divide(
+                        (self.layers[i+1] - np.dot(self.activation(self.layers[i]), self.weights[i])), self.variance_matrix[i])
+
+                self.layers[i+1] = self.layers[i+1] - self.error_layers[i] + np.dot(
+                    self.error_layers[i+1], self.weights[i+1].T) * self.der_activation(self.layers[i+1])
+            
+            # Softmax layer
+            self.error_layers[-1] = np.divide(self.layers[-1] - soft_max(self.layers[-2]), 4)
+            self.layers[-1][output_clamp] = (self.layers[-1] - self.error_layers[-1])[output_clamp]
+
+            # self.layers[-1][output_clamp] = (self.layers[-1] - self.error_layers[-1])[output_clamp]
+
+            # layers[-1][[True, False, True]] = np.random.rand(layers[-1].shape[0])[[True, False, True]]
+
+            # Convergence condition
+            if self.__check_convergence__(curr_state, self.layers) or t >= max_iter:
+                break
+
+            # Update current prediction
+            curr_state = self.layers.copy()
+
+        return self.layers[-1], t >= max_iter
 
 class PCN_tolerance(PCN):
 
