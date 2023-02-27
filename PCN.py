@@ -79,16 +79,19 @@ class PCN(learner):
             max_iter = self.max_iter    
 
         output_update_mask = [not output_clamped for _ in range(self.num_outputs)]
-        # input_update_mase = [not input_clamped for _ in range(self.num_features)]
+        input_clamp = np.isnan(sample)
 
         # Set input layer equal to the normalized input sample
-        self.layers[0] = sample
+        self.layers[0] = np.nan_to_num(sample)
 
         # Converge towards equilibrium state
         t = 0
         curr_state = self.layers.copy()
         while True:
             t += 1
+
+            # Updating the input layer based on feedback errors
+            self.layers[0][input_clamp] = (np.dot(self.error_layers[0], self.weights[0].T) * self.der_activation(self.layers[0]))[input_clamp]
 
             # Perform iteration
             for i in range(self.num_layers - 1):
@@ -113,7 +116,7 @@ class PCN(learner):
             # Update current prediction
             curr_state = self.layers.copy()
 
-        return self.layers[-1].copy(), t >= max_iter
+        return self.layers[-1].copy(), self.layers[0].copy(), t >= max_iter
 
     def train(self, samples, solutions, normalize_inputs=True) -> None:
         """
@@ -129,7 +132,7 @@ class PCN(learner):
         for sample, solution in zip(samples, solutions):
             # Clamp output and input
             self.layers[-1] = solution.astype(np.float64)
-            _, exceeded = self.__predict__(sample, output_clamped=True)
+            _, _, exceeded = self.__predict__(sample, output_clamped=True)
             exceeded_timelimit.append(exceeded)
 
             # Update weights based on residual error in network after convergence (eq. 2.19 in (Whittington, Bogacz - 2017)))
@@ -164,7 +167,7 @@ class PCN(learner):
 
         # Predicting and calculating error
         for sample, solution in zip(samples, solutions):
-            prediction, exceeded = self.__predict__(sample)
+            prediction, _, exceeded = self.__predict__(sample)
             exceeded_timelimit.append(exceeded)
             if verbose:
                 print("Prediction: ", prediction, end="  ")
@@ -252,7 +255,7 @@ class PCN_soft(PCN):
             # Update current prediction
             curr_state = self.layers.copy()
 
-        return self.layers[-1], t >= max_iter
+        return self.layers[-1].copy(), t >= max_iter
 
 class PCN_tolerance(PCN):
 
