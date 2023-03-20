@@ -1,7 +1,7 @@
 import numpy as np
 from pypapi import events, papi_high as high
 from ANN import ANN as ANN
-from helpers import get_iris_data
+from helpers import get_iris_data, profile_code
 import sys
 
 def main(argv):
@@ -54,4 +54,7 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    if '--profile' in sys.argv:
+        profile_code('main(sys.argv[1:])')
+    else:
+        main(sys.argv[1:])

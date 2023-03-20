@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+import cProfile, pstats
 
 def activation_function(x):
     """Calculates the activation of a node give an input
@@ -190,3 +190,13 @@ def get_mnist_data(num_samples=1000, test_split=0.2):
     y_test = pd.get_dummies(y_test).values
 
     return X_train, X_test, y_train, y_test
+
+def profile_code(code_string,sortby='calls',frac=0.1):
+    pr = cProfile.Profile()
+    pr.enable()
+    pr.run(code_string)
+    pr.disable()
+    ps = pstats.Stats(pr)
+    ps.strip_dirs()  # Removes all path info....else UGLY printouts.  This MUST precede sort_stats.
+    ps.sort_stats(sortby)
+    ps.print_stats(frac)  # print first frac(tion) of ALL the results.
