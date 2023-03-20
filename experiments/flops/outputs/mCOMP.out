@@ -1,0 +1,96 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: mCOMP_FLOP
+The job ID is 17488247
+The job was run on these nodes: idun-04-03
+Number of nodes: 1
+We are using 4 cores
+We are using 4 cores per node
+Total of 4 cores
+
+Training 10 ANN agents and 10 PCN agents
+Number of epochs: 30
+Dataset: Iris
+
+
+ ------------------ ANN Training ------------------ 
+
+Training agents...
+Average flops of agents over #30 epochs: 177 247 189.6
+Average Flops per epoch: 5 908 239.653333333
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ ANN validation ------------------ 
+
+*** Training set ***
+Mean Accuracy: 0.3454545454545455
+Flops performed: 107 471.0
+*******************
+*** Test set ***
+Accuracy: 0.29999999999999993
+Flops performed: 39 081.0
+*******************
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ PCN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.7318181818181818
+Flops performed: 8 180 798.9
+*******************
+*** Test set ***
+Accuracy: 0.7050000000000001
+Flops performed: 3 092 665.9
+*******************
+
+ ---------------------------------------------------- 
+
+Average flops of agents over #30 epochs: 9 474 300.0
+Average Flops per epoch: 315 810.0
+
+ ---------------------------------------------------- 
+
+
+ ------------------ PCN Training ------------------ 
+
+Training agents...
+Average flops of agents over #30 epochs: 181 547 045.6
+Average Flops per epoch: 6 051 568.1866666665
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ ANN validation ------------------ 
+
+*** Training set ***
+Mean Accuracy: 0.35454545454545455
+Flops performed: 107 471.0
+*******************
+*** Test set ***
+Accuracy: 0.275
+Flops performed: 39 081.0
+*******************
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ PCN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.7590909090909091
+Flops performed: 8 457 188.8
+*******************
+*** Test set ***
+Accuracy: 0.6775
+Flops performed: 3 111 488.8
+*******************
+
+ ---------------------------------------------------- 
+

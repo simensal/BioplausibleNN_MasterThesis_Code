@@ -36,20 +36,20 @@ def main(argv):
     # Reading and resetting flop counter
     pcn_training_flops = high.read_counters()[0]
     print(f'Flops performed over #{epochs} epochs: {pcn_training_flops}')
-    print(f'Average Flops per epoch: {pcn_training_flops/epochs}')
+    print(f'Average Flops per epoch: {pcn_training_flops/epochs:,}'.replace(",", " "))
 
     # Testing the agent
     print('\n\n ------------------ Validation set ------------------ \n')
     _, acc_test, _ = pcn.test(X_test, y_test, normalize_inputs=False)
     print(f'Accuracy: {acc_test}')
-    print(f'Flops performed during test validation: {high.read_counters()[0]}')
+    print(f'Flops performed during test validation: {high.read_counters()[0]:,}'.replace(",", " "))
     print("\n---------------------------------------------------\n")
 
     # Printing the flops
     print('\n ------------------ Training set ------------------ \n')
     _, acc_train, _ = pcn.test(X_train, y_train, normalize_inputs=False)
     print(f'Accuracy: {acc_train}')
-    print(f'Flops performed during training validation: {high.read_counters()[0]}')
+    print(f'Flops performed during training validation: {high.read_counters()[0]:,}'.replace(",", " "))
     print("\n---------------------------------------------------\n")
     high.stop_counters()
 

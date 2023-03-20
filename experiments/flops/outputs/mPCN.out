@@ -1,0 +1,33 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: mPCN_FLOP
+The job ID is 17487751
+The job was run on these nodes: idun-04-10
+Number of nodes: 1
+We are using 4 cores
+We are using 4 cores per node
+Total of 4 cores
+Number of agents: 10
+Number of epochs: 30
+
+Training agents...
+finished training agents.
+
+
+Average flops performed during training: 175 672 129.4
+
+
+------------------ Validation set ------------------
+
+Accuracy: 0.7449999999999999
+Flops performed during test validation: 3 108 279.0
+
+---------------------------------------------------
+
+
+------------------ Training set ------------------
+
+Accuracy: 0.7690909090909092
+Flops performed during training validation: 7 977 926.4
+
+---------------------------------------------------
+
