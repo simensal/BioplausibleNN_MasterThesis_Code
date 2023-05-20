@@ -35,7 +35,30 @@ def der_tanh_function(x):
     return 1 - tanh_function(x)**2
 
 
-def normalize(dataset):
+# def normalize(dataset):
+#     """Normalizes the columns of the dataset
+
+#     Args:
+#         dataset (ndarray): Dataset to be normalized
+
+#     Returns:
+#         ndarray: Normalized dataset
+#     """
+#     return (dataset - np.min(dataset, axis=0)) / (np.max(dataset, axis=0) - np.min(dataset, axis=0))
+
+
+# def normalize_tanh(dataset):
+#     """Normalize dataset to be between -1 and 1
+
+#     Args:
+#         dataset (ndarray): Dataset to be normalized
+
+#     Returns:
+#         ndarray: Normalized dataset
+#     """
+#     return 2 * normalize(dataset) - 1
+
+def normalize(X_train, X_test): 
     """Normalizes the columns of the dataset
 
     Args:
@@ -44,10 +67,16 @@ def normalize(dataset):
     Returns:
         ndarray: Normalized dataset
     """
-    return (dataset - np.min(dataset, axis=0)) / (np.max(dataset, axis=0) - np.min(dataset, axis=0))
 
+    X_train_min = np.min(X_train, axis=0)
+    X_train_max = np.max(X_train, axis=0)
 
-def normalize_tanh(dataset):
+    X_train = (X_train - X_train_min) / (X_train_max - X_train_min)
+    X_test = (X_test - X_train_min) / (X_train_max - X_train_min)
+
+    return X_train, X_test
+
+def normalize_tanh(X_train, X_test):
     """Normalize dataset to be between -1 and 1
 
     Args:
@@ -56,8 +85,14 @@ def normalize_tanh(dataset):
     Returns:
         ndarray: Normalized dataset
     """
-    return 2 * normalize(dataset) - 1
 
+    X_train_min = np.min(X_train, axis=0)
+    X_train_max = np.max(X_train, axis=0)
+
+    X_train = 2 * ((X_train - X_train_min) / (X_train_max - X_train_min)) - 1
+    X_test = 2 * ((X_test - X_train_min) / (X_train_max - X_train_min)) - 1
+
+    return X_train, X_test
 
 tanh = np.vectorize(tanh_function)
 der_tanh = np.vectorize(der_tanh_function)
@@ -92,6 +127,8 @@ def MSE(y, y_pred):
     return np.mean((y - y_pred)**2)
 
 ### Data helpers ###
+
+
 def get_data(path, split=0.8, sep=',') -> tuple:
     """Gets the data from the given path
 
@@ -190,3 +227,19 @@ def get_mnist_data(num_samples=1000, test_split=0.2):
     y_test = pd.get_dummies(y_test).values
 
     return X_train, X_test, y_train, y_test
+
+def mask_data(dataset, fraction):
+    """Masks the data with the given fraction
+
+    Args:
+        dataset (ndarray): Dataset to be masked
+        fraction (float): Fraction of the data to be masked
+
+    Returns:
+        ndarray: Masked dataset
+    """
+    mask = np.random.choice([True, False], size=dataset.shape, p=[
+                            fraction, 1-fraction])
+    sparse_dataset = dataset.copy()
+    sparse_dataset[mask] = np.nan
+    return sparse_dataset
