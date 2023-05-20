@@ -1,0 +1,61 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: flo_acc_iris
+The job ID is 18077069
+The job was run on these nodes: idun-04-01
+Number of nodes: 1
+We are using 1 cores
+We are using 1 cores per node
+Total of  cores
+
+Training 10 ANN agents and 10 PCN agents
+Number of epochs: 10
+Dataset: iris
+
+
+ ------------------ ANN Training ------------------ 
+
+Training agents...
+Average flops of agents over #500 epochs: 157 905 000.0
+Average Flops per epoch: 315 810.0
+
+ ---------------------------------------------------- 
+
+
+ ------------------ PCN Training ------------------ 
+
+Training agents...
+Average flops of agents over #10 epochs: 1 074 041 546.5
+Average Flops per epoch: 107 404 154.65
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ ANN validation ------------------ 
+
+*** Training set ***
+Mean Accuracy: 0.7445454545454545
+Flops performed: 107 471.0
+*******************
+*** Test set ***
+Accuracy: 0.7975
+Flops performed: 39 081.0
+*******************
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ PCN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.859090909090909
+Flops performed: 59 024 135.1
+*******************
+*** Test set ***
+Accuracy: 0.8775000000000001
+Flops performed: 18 801 398.9
+*******************
+
+ ---------------------------------------------------- 
+

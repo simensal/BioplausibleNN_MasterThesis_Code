@@ -1,0 +1,61 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: flo_acc_wine
+The job ID is 18077110
+The job was run on these nodes: idun-06-08
+Number of nodes: 1
+We are using 1 cores
+We are using 1 cores per node
+Total of  cores
+
+Training 10 ANN agents and 10 PCN agents
+Number of epochs: 10
+Dataset: wine
+
+
+ ------------------ ANN Training ------------------ 
+
+Training agents...
+Average flops of agents over #170 epochs: 146 843 620.0
+Average Flops per epoch: 863 786.0
+
+ ---------------------------------------------------- 
+
+
+ ------------------ PCN Training ------------------ 
+
+Training agents...
+Average flops of agents over #10 epochs: 468 353 075.2
+Average Flops per epoch: 46 835 307.519999996
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ ANN validation ------------------ 
+
+*** Training set ***
+Mean Accuracy: 0.9112676056338028
+Flops performed: 300 899.0
+*******************
+*** Test set ***
+Accuracy: 0.85
+Flops performed: 76 285.0
+*******************
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ PCN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.8929577464788732
+Flops performed: 30 034 749.0
+*******************
+*** Test set ***
+Accuracy: 0.8666666666666666
+Flops performed: 8 249 307.0
+*******************
+
+ ---------------------------------------------------- 
+

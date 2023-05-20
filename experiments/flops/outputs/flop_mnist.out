@@ -1,0 +1,61 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: flo_flo_mnist
+The job ID is 18056577
+The job was run on these nodes: idun-06-08
+Number of nodes: 1
+We are using 1 cores
+We are using 1 cores per node
+Total of  cores
+
+Training 10 ANN agents and 10 PCN agents
+Number of epochs: 30
+Dataset: mnist
+
+
+ ------------------ PCN Training ------------------ 
+
+Training agents...
+Average flops of agents over #30 epochs: 1 834 788 412 677.8
+Average Flops per epoch: 61 159 613 755.92667
+
+ ---------------------------------------------------- 
+
+
+ ------------------ ANN Training ------------------ 
+
+Training agents...
+Average flops by agent over 570 epochs: 1 893 582 864 000.0
+Average flops per epoch: 3 322 075 200.0
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ ANN validation ------------------ 
+
+*** Training set ***
+Mean Accuracy: 0.974
+Flops performed: 1 228 448 801.0
+*******************
+*** Test set ***
+Accuracy: 0.9700000000000001
+Flops performed: 307 112 201.0
+*******************
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ PCN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.7073750000000001
+Flops performed: 44 632 065 865.9
+*******************
+*** Test set ***
+Accuracy: 0.6925000000000001
+Flops performed: 11 115 767 164.4
+*******************
+
+ ---------------------------------------------------- 
+

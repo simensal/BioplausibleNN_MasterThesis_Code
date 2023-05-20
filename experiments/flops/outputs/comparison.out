@@ -1,0 +1,54 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: COMP_FLOP
+The job ID is 17487734
+The job was run on these nodes: idun-04-10
+Number of nodes: 1
+We are using 4 cores
+We are using 4 cores per node
+Total of 4 cores
+
+ ------------------ ANN Training ------------------ 
+
+Flops performed over #30 epochs: 9474300
+Average Flops per epoch: 315810.0
+
+ ---------------------------------------------------- 
+
+
+ ------------------ PCN Training ------------------ 
+
+Flops performed over #30 epochs: 181047769
+Average Flops per epoch: 6034925.633333334
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ ANN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.37272727272727274
+Flops performed: 107471
+*******************
+*** Test set ***
+Accuracy: 0.225
+Flops performed: 39081
+*******************
+
+ ---------------------------------------------------- 
+
+
+
+ ------------------ PCN validation ------------------ 
+
+*** Training set ***
+Accuracy: 0.7636363636363637
+Flops performed: 8653280
+*******************
+*** Test set ***
+Accuracy: 0.7
+Flops performed: 3160801
+*******************
+
+ ---------------------------------------------------- 
+
