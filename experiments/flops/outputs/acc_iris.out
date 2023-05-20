@@ -1,21 +1,21 @@
 We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
-The name of the job is: mCOMP_FLOP
-The job ID is 17566742
-The job was run on these nodes: idun-06-06
+The name of the job is: flo_acc_iris
+The job ID is 18077069
+The job was run on these nodes: idun-04-01
 Number of nodes: 1
-We are using 4 cores
-We are using 4 cores per node
-Total of 4 cores
+We are using 1 cores
+We are using 1 cores per node
+Total of  cores
 
 Training 10 ANN agents and 10 PCN agents
-Number of epochs: 30
-Dataset: Iris
+Number of epochs: 10
+Dataset: iris
 
 
  ------------------ ANN Training ------------------ 
 
 Training agents...
-Average flops of agents over #30 epochs: 9 474 300.0
+Average flops of agents over #500 epochs: 157 905 000.0
 Average Flops per epoch: 315 810.0
 
  ---------------------------------------------------- 
@@ -24,8 +24,8 @@ Average Flops per epoch: 315 810.0
  ------------------ PCN Training ------------------ 
 
 Training agents...
-Average flops of agents over #30 epochs: 182 981 856.4
-Average Flops per epoch: 6 099 395.213333334
+Average flops of agents over #10 epochs: 1 074 041 546.5
+Average Flops per epoch: 107 404 154.65
 
  ---------------------------------------------------- 
 
@@ -34,11 +34,11 @@ Average Flops per epoch: 6 099 395.213333334
  ------------------ ANN validation ------------------ 
 
 *** Training set ***
-Mean Accuracy: 0.35454545454545455
+Mean Accuracy: 0.7445454545454545
 Flops performed: 107 471.0
 *******************
 *** Test set ***
-Accuracy: 0.275
+Accuracy: 0.7975
 Flops performed: 39 081.0
 *******************
 
@@ -49,12 +49,12 @@ Flops performed: 39 081.0
  ------------------ PCN validation ------------------ 
 
 *** Training set ***
-Accuracy: 0.6927272727272727
-Flops performed: 8 540 777.3
+Accuracy: 0.859090909090909
+Flops performed: 59 024 135.1
 *******************
 *** Test set ***
-Accuracy: 0.8225
-Flops performed: 3 388 234.2
+Accuracy: 0.8775000000000001
+Flops performed: 18 801 398.9
 *******************
 
  ---------------------------------------------------- 

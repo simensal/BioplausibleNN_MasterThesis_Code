@@ -1,22 +1,22 @@
 We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
-The name of the job is: mCOMP_FLOP
-The job ID is 17566742
-The job was run on these nodes: idun-06-06
+The name of the job is: flo_epo_mnist
+The job ID is 18056574
+The job was run on these nodes: idun-06-08
 Number of nodes: 1
-We are using 4 cores
-We are using 4 cores per node
-Total of 4 cores
+We are using 1 cores
+We are using 1 cores per node
+Total of  cores
 
 Training 10 ANN agents and 10 PCN agents
 Number of epochs: 30
-Dataset: Iris
+Dataset: mnist
 
 
  ------------------ ANN Training ------------------ 
 
 Training agents...
-Average flops of agents over #30 epochs: 9 474 300.0
-Average Flops per epoch: 315 810.0
+Average flops of agents over #30 epochs: 99 662 256 000.0
+Average Flops per epoch: 3 322 075 200.0
 
  ---------------------------------------------------- 
 
@@ -24,8 +24,8 @@ Average Flops per epoch: 315 810.0
  ------------------ PCN Training ------------------ 
 
 Training agents...
-Average flops of agents over #30 epochs: 182 981 856.4
-Average Flops per epoch: 6 099 395.213333334
+Average flops of agents over #30 epochs: 1 840 148 239 617.4
+Average Flops per epoch: 61 338 274 653.91333
 
  ---------------------------------------------------- 
 
@@ -34,12 +34,12 @@ Average Flops per epoch: 6 099 395.213333334
  ------------------ ANN validation ------------------ 
 
 *** Training set ***
-Mean Accuracy: 0.35454545454545455
-Flops performed: 107 471.0
+Mean Accuracy: 0.7681250000000001
+Flops performed: 1 228 448 801.0
 *******************
 *** Test set ***
-Accuracy: 0.275
-Flops performed: 39 081.0
+Accuracy: 0.7625
+Flops performed: 307 112 201.0
 *******************
 
  ---------------------------------------------------- 
@@ -49,12 +49,12 @@ Flops performed: 39 081.0
  ------------------ PCN validation ------------------ 
 
 *** Training set ***
-Accuracy: 0.6927272727272727
-Flops performed: 8 540 777.3
+Accuracy: 0.713125
+Flops performed: 45 319 400 290.9
 *******************
 *** Test set ***
-Accuracy: 0.8225
-Flops performed: 3 388 234.2
+Accuracy: 0.706
+Flops performed: 11 256 956 848.2
 *******************
 
  ---------------------------------------------------- 

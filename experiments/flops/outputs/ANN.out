@@ -1,7 +1,7 @@
 We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
 The name of the job is: ANN_FLOP
-The job ID is 17487767
-The job was run on these nodes: idun-04-10
+The job ID is 17488263
+The job was run on these nodes: idun-04-03
 Number of nodes: 1
 We are using 4 cores
 We are using 4 cores per node
@@ -13,7 +13,7 @@ Average Flops per epoch: 315810.0
 
  ------------------ Validation set ------------------ 
 
-Accuracy: 0.275
+Accuracy: 0.3
 Flops performed during test validation: 39111
 
 ---------------------------------------------------
@@ -21,8 +21,90 @@ Flops performed during test validation: 39111
 
  ------------------ Training set ------------------ 
 
-Accuracy: 0.35454545454545455
+Accuracy: 0.34545454545454546
 Flops performed during training validation: 107476
 
 ---------------------------------------------------
+
+         425676 function calls (425528 primitive calls) in 0.406 seconds
+
+   Ordered by: call count
+   List reduced from 737 to 74 due to restriction <0.1>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    40253    0.009    0.000    0.009    0.000 {built-in method numpy.asarray}
+    37950    0.017    0.000    0.017    0.000 helpers.py:5(activation_function)
+    36300    0.022    0.000    0.022    0.000 helpers.py:14(der_activation_function)
+    27001    0.024    0.000    0.024    0.000 {built-in method numpy.asanyarray}
+    27000    0.005    0.000    0.005    0.000 function_base.py:2361(<genexpr>)
+20497/20449    0.003    0.000    0.003    0.000 {built-in method builtins.len}
+    16985    0.015    0.000    0.046    0.000 {built-in method numpy.core._multiarray_umath.implement_array_function}
+14817/14796    0.003    0.000    0.004    0.000 {built-in method builtins.isinstance}
+    13526    0.002    0.000    0.002    0.000 {method 'join' of 'str' objects}
+    13501    0.007    0.000    0.012    0.000 {built-in method builtins.any}
+    13500    0.015    0.000    0.239    0.000 function_base.py:2300(__call__)
+    13500    0.005    0.000    0.006    0.000 function_base.py:2360(<listcomp>)
+    13500    0.008    0.000    0.008    0.000 function_base.py:2365(<listcomp>)
+    13500    0.008    0.000    0.014    0.000 function_base.py:2389(<listcomp>)
+    13500    0.046    0.000    0.123    0.000 function_base.py:2330(_get_ufunc_and_otypes)
+    13500    0.005    0.000    0.017    0.000 function_base.py:2409(<listcomp>)
+    13500    0.046    0.000    0.225    0.000 function_base.py:2399(_vectorize_call)
+    13500    0.017    0.000    0.017    0.000 {built-in method numpy.frompyfunc}
+    13204    0.004    0.000    0.004    0.000 {method 'ravel' of 'numpy.ndarray' objects}
+    10200    0.006    0.000    0.020    0.000 <__array_function__ internals>:177(dot)
+    10200    0.002    0.000    0.002    0.000 multiarray.py:736(dot)
+     6600    0.004    0.000    0.037    0.000 <__array_function__ internals>:177(outer)
+     6600    0.001    0.000    0.001    0.000 numeric.py:853(_outer_dispatcher)
+     6600    0.024    0.000    0.029    0.000 numeric.py:857(outer)
+     3450    0.015    0.000    0.150    0.000 ANN.py:39(__predict__)
+     3300    0.021    0.000    0.146    0.000 ANN.py:64(backprops_error)
+     3300    0.024    0.000    0.062    0.000 ANN.py:81(update_network)
+      409    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+      355    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+      264    0.000    0.000    0.000    0.000 generic.py:40(_check)
+      264    0.000    0.000    0.000    0.000 generic.py:45(_instancecheck)
+      175    0.000    0.000    0.000    0.000 {built-in method builtins.issubclass}
+      169    0.001    0.000    0.001    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+      165    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+      157    0.000    0.000    0.000    0.000 fromnumeric.py:70(<dictcomp>)
+      157    0.000    0.000    0.001    0.000 fromnumeric.py:69(_wrapreduction)
+      150    0.000    0.000    0.001    0.000 <__array_function__ internals>:177(sum)
+      150    0.000    0.000    0.000    0.000 fromnumeric.py:2157(_sum_dispatcher)
+      150    0.000    0.000    0.001    0.000 fromnumeric.py:2162(sum)
+       92    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+       74    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       70    0.000    0.000    0.000    0.000 common.py:1591(_is_dtype_type)
+       50    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+       45    0.000    0.000    0.000    0.000 {pandas._libs.lib.is_list_like}
+    42/10    0.000    0.000    0.000    0.000 abc.py:121(__subclasscheck__)
+    42/10    0.000    0.000    0.000    0.000 {built-in method _abc._abc_subclasscheck}
+       40    0.000    0.000    0.000    0.000 common.py:148(<lambda>)
+       40    0.000    0.000    0.000    0.000 common.py:146(classes)
+       37    0.000    0.000    0.000    0.000 base.py:926(__len__)
+       32    0.000    0.000    0.000    0.000 common.py:1556(get_dtype)
+       32    0.000    0.000    0.000    0.000 config.py:611(_get_deprecated_option)
+       32    0.000    0.000    0.000    0.000 ANN.py:89(__validate__)
+       32    0.000    0.000    0.000    0.000 {built-in method builtins.hash}
+       32    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
+       31    0.000    0.000    0.000    0.000 inference.py:325(is_hashable)
+    31/30    0.000    0.000    0.000    0.000 {built-in method builtins.all}
+       30    0.000    0.000    0.000    0.000 {pandas._libs.lib.is_scalar}
+       30    0.000    0.000    0.000    0.000 common.py:156(<lambda>)
+       30    0.000    0.000    0.000    0.000 common.py:151(classes_and_not_datetimelike)
+       30    0.000    0.000    0.000    0.000 base.py:286(is_dtype)
+       30    0.005    0.000    0.357    0.012 ANN.py:100(train)
+       29    0.000    0.000    0.000    0.000 {pandas._libs.lib.is_bool}
+       29    0.000    0.000    0.000    0.000 sre_parse.py:165(__getitem__)
+       28    0.000    0.000    0.000    0.000 common.py:1744(<genexpr>)
+       27    0.000    0.000    0.000    0.000 base.py:5133(_values)
+       26    0.000    0.000    0.000    0.000 base.py:324(ndim)
+       26    0.000    0.000    0.000    0.000 inference.py:292(<genexpr>)
+       25    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:244(_verbose_message)
+       25    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:128(<listcomp>)
+       25    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:126(_path_join)
+       24    0.000    0.000    0.000    0.000 construction.py:399(extract_array)
+       24    0.000    0.000    0.000    0.000 common.py:501(is_categorical_dtype)
+       24    0.000    0.000    0.000    0.000 typing.py:1737(cast)
+       24    0.000    0.000    0.000    0.000 {built-in method numpy.empty}
+
 

@@ -1,0 +1,44 @@
+We are running from this directory: /cluster/home/simesal/BioplausibleNN_MasterThesis_Code
+The name of the job is: mCOMP_FLOP_mnist
+The job ID is 18021468
+The job was run on these nodes: idun-06-14
+Number of nodes: 1
+We are using 4 cores
+We are using 4 cores per node
+Total of  cores
+
+Training 10 ANN agents and 10 PCN agents
+Number of epochs: 30
+Dataset: mnist
+
+
+ ------------------ ANN Training ------------------ 
+
+Training agents...
+Traceback (most recent call last):
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/env/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3803, in get_loc
+    return self._engine.get_loc(casted_key)
+  File "pandas/_libs/index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 0
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/flop_exp__mCOMP.py", line 175, in <module>
+    main(sys.argv[1:])
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/flop_exp__mCOMP.py", line 84, in main
+    anns_training_flops.append(train_agent(agent, X_train_bp, y_train, epochs, verbose, sample_interval)[1])
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/flop_exp__mCOMP.py", line 37, in train_agent
+    agent.train(X_train, y_train, normalize_inputs=False)
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/ANN.py", line 107, in train
+    self.__validate__(samples, solutions)
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/ANN.py", line 97, in __validate__
+    assert len(samples[0]) == self.num_features
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/env/lib/python3.10/site-packages/pandas/core/frame.py", line 3805, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "/cluster/home/simesal/BioplausibleNN_MasterThesis_Code/env/lib/python3.10/site-packages/pandas/core/indexes/base.py", line 3805, in get_loc
+    raise KeyError(key) from err
+KeyError: 0

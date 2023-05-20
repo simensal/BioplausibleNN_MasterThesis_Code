@@ -189,7 +189,7 @@ def get_mnist_data(num_samples=1000, test_split=0.2):
     y_train = pd.get_dummies(y_train).values
     y_test = pd.get_dummies(y_test).values
 
-    return X_train, X_test, y_train, y_test
+    return X_train.to_numpy(), X_test.to_numpy(), y_train, y_test
 
 def profile_code(code_string,sortby='calls',frac=0.1):
     pr = cProfile.Profile()
@@ -200,3 +200,48 @@ def profile_code(code_string,sortby='calls',frac=0.1):
     ps.strip_dirs()  # Removes all path info....else UGLY printouts.  This MUST precede sort_stats.
     ps.sort_stats(sortby)
     ps.print_stats(frac)  # print first frac(tion) of ALL the results.
+
+class settings:
+
+    def __init__(self, dataset) -> None:
+        self.dataset = dataset
+        match dataset:
+            case 'iris':
+                self.epochs = 30
+                self.hidden_layers = [6]
+                self.lr = 0.01
+                self.conv_tol = 0.01
+                self.stopping_acc = 0.80
+            case 'wine':
+                self.epochs = 30
+                self.hidden_layers = [15]
+                self.lr = 0.01
+                self.conv_tol = 0.01
+                self.stopping_acc = 0.85
+            case 'mnist':
+                self.epochs = 30
+                self.hidden_layers = [500, 500]
+                self.lr = 0.01
+                self.conv_tol = 0.01
+                self.stopping_acc = 0.75 # try with 0.75 if timeouts again
+            case 'yeast':
+                self.epochs = 30
+                self.hidden_layers = [15]
+                self.lr = 0.01
+                self.conv_tol = 0.01
+                self.stopping_acc = 0.80
+            case _:
+                raise ValueError(f'Unknown dataset: {dataset}')
+
+    def get_data(self):
+        match self.dataset:
+            case 'iris':
+                return get_iris_data()
+            case 'wine':
+                return get_data('./data/wine/wine.data')
+            case 'mnist':
+                return get_mnist_data()
+            case 'yeast':
+                return get_yeast_data()
+            case _:
+                raise ValueError(f'Unknown dataset: {self.dataset}')
