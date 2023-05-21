@@ -60,8 +60,14 @@ class learner:
             solutions, axis=1)).sum(), len(solutions))
         return predictions, accuracy, error
 
-    def normalize(self, samples) -> np.ndarray:
+    # def normalize(self, samples) -> np.ndarray:
+    #     """
+    #     Normalizes the dataset
+    #     """
+    #     return self.normalize(samples)
+
+    def normalize(self, X_train, X_test) -> tuple[np.ndarray, np.ndarray]:
         """
         Normalizes the dataset
         """
-        return self.normalize(samples)
+        return self.normalize(X_train, X_test)

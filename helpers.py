@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import cProfile, pstats
 
-def activation_function(x):
+def activation_function(x : float) -> float:
     """Calculates the activation of a node give an input
 
     Args:
@@ -11,14 +11,14 @@ def activation_function(x):
     return (1 + np.e**-x)**-1
 
 
-def der_activation_function(x):
+def der_activation_function(x : float) -> float:
     """Calculates the derivative of the activation function
 
     Args:
         x (float: Scalar) :  Number representing the sum of the input to the give node"""
     return (np.e**-x)/((1+np.e**-x)**2)
 
-def tanh_function(x):
+def tanh_function(x : float) -> float:
     """Calculates the activation of a node give an input
 
     Args:
@@ -27,7 +27,7 @@ def tanh_function(x):
     return (np.e**x - np.e**-x) / (np.e**x + np.e**-x)
 
 
-def der_tanh_function(x):
+def der_tanh_function(x : float) -> float:
     """Calculates the derivative of the activation function
 
     Args:
@@ -58,7 +58,7 @@ def der_tanh_function(x):
 #     """
 #     return 2 * normalize(dataset) - 1
 
-def normalize(X_train, X_test): 
+def normalize(X_train: np.ndarray, X_test: np.ndarray) -> tuple[np.ndarray, np.ndarray]: 
     """Normalizes the columns of the dataset
 
     Args:
@@ -76,7 +76,7 @@ def normalize(X_train, X_test):
 
     return X_train, X_test
 
-def normalize_tanh(X_train, X_test):
+def normalize_tanh(X_train : np.ndarray, X_test: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Normalize dataset to be between -1 and 1
 
     Args:
@@ -93,6 +93,43 @@ def normalize_tanh(X_train, X_test):
     X_test = 2 * ((X_test - X_train_min) / (X_train_max - X_train_min)) - 1
 
     return X_train, X_test
+
+def rescale_normalized(X, reference) -> tuple[np.ndarray, np.ndarray]:
+    """Rescales the normalized dataset to the original scale
+    
+    Args:
+        X_train (ndarray): Normalized training dataset
+        X_test (ndarray): Normalized test dataset
+        X_train_raw (ndarray): Raw training dataset
+
+    Returns:
+        tuple: Rescaled training and test datasets
+    """
+
+    ref_min = np.min(reference, axis=0)
+    ref_max = np.max(reference, axis=0)
+
+    X_train = X * (ref_max - ref_min) + ref_min
+
+    return X_train
+
+def rescale_normalized_tanh(X, reference) -> tuple[np.ndarray, np.ndarray]:
+    """Rescales the normalized dataset to the original scale
+    
+    Args:
+        X_train (ndarray): Normalized training dataset
+        reference (ndarray): Raw training dataset
+
+    Returns:
+        tuple: Rescaled training and test datasets
+    """
+
+    ref_min = np.min(reference, axis=0)
+    ref_max = np.max(reference, axis=0)
+
+    X_train = ((X + 1)/2) * (ref_max - ref_min) + ref_min
+
+    return X_train 
 
 tanh = np.vectorize(tanh_function)
 der_tanh = np.vectorize(der_tanh_function)
@@ -125,6 +162,10 @@ def MSE(y, y_pred):
     """Calculates the mean squared error between the predicted and the actual values
     """
     return np.mean((y - y_pred)**2)
+
+def MAE(X, X_hat):
+        """Calculate the mean absolute error between two matrices"""
+        return np.mean(np.abs(X - X_hat))
 
 ### Data helpers ###
 
@@ -298,3 +339,32 @@ class settings:
                 return get_yeast_data()
             case _:
                 raise ValueError(f'Unknown dataset: {self.dataset}')
+
+class InferenceSettings(settings): 
+    
+    def __init__(self, dataset) -> None:
+        super().__init__(dataset)
+        self.fully_epochs = 30
+        self.fully_lr = 0.01
+        self.fully_conv_tol = 0.01
+        self.activation_decay = 1e-5
+        self.weight_decay = 1e-6
+
+        match dataset:
+            case 'iris':
+                self.masking_fractions = [0.01*i for i in range(1, 6)]
+                # self.activation_decay = 5e-4
+                # self.weight_decay = 1e-4
+            case 'wine':
+                self.masking_fractions = [0.02*i for i in range(1, 6)]
+                # self.activation_decay = 5e-4
+                # self.weight_decay = 1e-4
+            case 'mnist':
+                self.masking_fractions = [0.02*i for i in range(1, 6)]
+                # self.activation_decay = 5e-4
+                # self.weight_decay = 1e-4
+            case 'yeast':
+                self.masking_fractions = [0.02*i for i in range(1, 6)]
+            case _:
+                raise ValueError(f'Unknown dataset: {dataset}')
+        
