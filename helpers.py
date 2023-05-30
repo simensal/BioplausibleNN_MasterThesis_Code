@@ -356,10 +356,12 @@ class InferenceSettings(settings):
         match dataset:
             case 'iris':
                 self.masking_fractions = [0.01*i for i in range(1, 6)]
+                self.ann_eval_epochs = 500
                 # self.activation_decay = 5e-4
                 # self.weight_decay = 1e-4
             case 'wine':
                 self.masking_fractions = [0.01*i for i in range(1, 6)]
+                self.ann_eval_epochs = 500
                 # self.activation_decay = 5e-4
                 # self.weight_decay = 1e-4
             case 'mnist':

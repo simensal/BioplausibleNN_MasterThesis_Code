@@ -127,7 +127,10 @@ def main(argv):
         if settings.dataset == 'mnist':
             X_train_ann = dataset / 256
             X_train_pcn = 2 * dataset / 256 - 1
+            eval_test_ann = X_test_raw / 256
+            eval_train_ann = X_train_raw / 256
         else:
+            eval_train_ann, eval_test_ann = anns[0].normalize(X_train_raw, X_test_raw)
             X_train_ann, _ = anns[0].normalize(dataset, X_test)
             X_train_pcn, _ = pcns[0].normalize(dataset, X_test)
 
@@ -146,11 +149,11 @@ def main(argv):
                 ann.train(X_train_ann, y_train, normalize_inputs=False)
             
             # Testing the agent on test split
-            anns_acc.append(ann.test(X_test, y_test, normalize_inputs=False)[1])
+            anns_acc.append(ann.test(eval_test_ann, y_test, normalize_inputs=False)[1])
             pcns_acc.append(pcn.test(X_test, y_test, normalize_inputs=False)[1])
             
             # Testing the agent on the real train split
-            anns_acc_train.append(ann.test(X_train, y_train, normalize_inputs=False)[1])
+            anns_acc_train.append(ann.test(eval_train_ann, y_train, normalize_inputs=False)[1])
             pcns_acc_train.append(pcn.test(X_train, y_train, normalize_inputs=False)[1])
             
             if verbose:
@@ -173,7 +176,10 @@ def main(argv):
         if settings.dataset == 'mnist':
             X_train_pcn = 2 * dataset / 256 - 1
             X_train_ann = dataset / 256
+            eval_test_ann = X_test_raw / 256
+            eval_train_ann = X_train_raw / 256
         else: 
+            eval_train_ann, eval_test_ann = anns[0].normalize(X_train_raw, X_test_raw)
             X_train_ann, _ = anns[0].normalize(dataset, X_test)
             X_train_pcn, _ = pcns[0].normalize(dataset, X_test)
 
@@ -190,11 +196,11 @@ def main(argv):
                 ann.train(X_train_ann, y_train, normalize_inputs=False)
 
             # Testing the agent on test split
-            anns_acc.append(ann.test(X_test, y_test, normalize_inputs=False)[1])
+            anns_acc.append(ann.test(eval_test_ann, y_test, normalize_inputs=False)[1])
             pcns_acc.append(pcn.test(X_test, y_test, normalize_inputs=False)[1])
             
             # Testing the agent on the real train split
-            anns_acc_train.append(ann.test(X_train, y_train, normalize_inputs=False)[1])
+            anns_acc_train.append(ann.test(eval_train_ann, y_train, normalize_inputs=False)[1])
             pcns_acc_train.append(pcn.test(X_train, y_train, normalize_inputs=False)[1])
 
             if verbose:
@@ -216,8 +222,8 @@ def main(argv):
         X_train_ann = X_train_raw / 256
         X_test_ann = X_test_raw / 256
     else:
-        X_train_ann, _ = anns[0].normalize(X_train_raw, X_test_raw)
-        X_test_ann, _ = anns[0].normalize(X_test_raw, X_test_raw)
+        X_train_ann, X_test_ann = anns[0].normalize(X_train_raw, X_test_raw)
+        # X_test_ann, _ = anns[0].normalize(X_test_raw, X_test_raw)
 
     anns_acc_control = []
     pcns_acc_control = []
