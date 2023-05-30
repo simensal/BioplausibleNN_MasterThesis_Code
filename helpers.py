@@ -247,7 +247,7 @@ def get_iris_data():
     return X_train, X_test, y_train, y_test
 
 
-def get_mnist_data(num_samples=1000, test_split=0.2):
+def get_mnist_data(num_samples=1000, test_split=0.2, normalize: bool = True):
     """ Get the mnist data and converts it to training and test data sets
 
     Returns:
@@ -255,7 +255,9 @@ def get_mnist_data(num_samples=1000, test_split=0.2):
     """
 
     # Load data from mnist and create training and test sets
-    mnist = pd.read_csv('./data/mnist/mnist_train.csv')/256
+    mnist = pd.read_csv('./data/mnist/mnist_train.csv')
+    if normalize:
+        mnist = mnist/256
     y_train = mnist['label'][:int(num_samples*(1-test_split))]
     X_train = mnist.drop('label', axis=1)[:int(num_samples*(1-test_split))]
 
@@ -327,14 +329,14 @@ class settings:
             case _:
                 raise ValueError(f'Unknown dataset: {dataset}')
 
-    def get_data(self):
+    def get_data(self, normalize = False):
         match self.dataset:
             case 'iris':
                 return get_iris_data()
             case 'wine':
                 return get_data('./data/wine/wine.data')
             case 'mnist':
-                return get_mnist_data()
+                return get_mnist_data(normalize=normalize)
             case 'yeast':
                 return get_yeast_data()
             case _:
@@ -349,6 +351,7 @@ class InferenceSettings(settings):
         self.fully_conv_tol = 0.01
         self.activation_decay = 1e-5
         self.weight_decay = 1e-6
+        self.ann_eval_epochs = 100
 
         match dataset:
             case 'iris':
@@ -356,15 +359,15 @@ class InferenceSettings(settings):
                 # self.activation_decay = 5e-4
                 # self.weight_decay = 1e-4
             case 'wine':
-                self.masking_fractions = [0.02*i for i in range(1, 6)]
+                self.masking_fractions = [0.01*i for i in range(1, 6)]
                 # self.activation_decay = 5e-4
                 # self.weight_decay = 1e-4
             case 'mnist':
-                self.masking_fractions = [0.02*i for i in range(1, 6)]
+                self.masking_fractions = [0.01*i for i in range(1, 6)]
                 # self.activation_decay = 5e-4
                 # self.weight_decay = 1e-4
             case 'yeast':
-                self.masking_fractions = [0.02*i for i in range(1, 6)]
+                self.masking_fractions = [0.01*i for i in range(1, 6)]
             case _:
                 raise ValueError(f'Unknown dataset: {dataset}')
         
