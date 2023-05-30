@@ -212,8 +212,12 @@ def main(argv):
     anns = [ANN(X_train.shape[1], settings.hidden_layers, y_train.shape[1]) for _ in range(10)]
     pcns = [PCN(X_train.shape[1], settings.hidden_layers, y_train.shape[1]) for _ in range(10)]
 
-    X_train_ann = X_train_raw / 256
-    X_test_ann = X_test_raw / 256
+    if settings.dataset == 'mnist':
+        X_train_ann = X_train_raw / 256
+        X_test_ann = X_test_raw / 256
+    else:
+        X_train_ann, _ = anns[0].normalize(X_train_raw, X_test_raw)
+        X_test_ann, _ = anns[0].normalize(X_test_raw, X_test_raw)
 
     anns_acc_control = []
     pcns_acc_control = []
