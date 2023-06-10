@@ -102,7 +102,7 @@ def main(argv):
         pcn_loss.append(pcn_mae)
         knn_loss.append(knn_mae)
 
-    pd.DataFrame({'sparsity': masking_fractions,'pcn_loss': pcn_loss, 'knn_loss': knn_loss}).to_csv('./experiments/inference/results/'+ settings.dataset +'./loss.csv')
+    pd.DataFrame({'sparsity': masking_fractions,'pcn_loss': pcn_loss, 'knn_loss': knn_loss}).to_csv('./experiments/inference/results/'+ settings.dataset +'/loss.csv')
     
     ### MAE of the infered values ###
 

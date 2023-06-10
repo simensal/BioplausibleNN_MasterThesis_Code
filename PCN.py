@@ -97,8 +97,8 @@ class PCN(learner):
             for i in range(self.num_layers - 1):
 
                 # Update error layer
-                self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(self.activation(self.layers[i]), self.weights[i])), self.variance_matrix[i])
-                # self.error_layers[i] = np.divide((self.layers[i+1] - self.activation(np.dot(self.layers[i], self.weights[i]))), self.variance_matrix[i])
+                # self.error_layers[i] = np.divide((self.layers[i+1] - np.dot(self.activation(self.layers[i]), self.weights[i])), self.variance_matrix[i])
+                self.error_layers[i] = np.divide((self.layers[i+1] - self.activation(np.dot(self.layers[i], self.weights[i]))), self.variance_matrix[i])
 
                 # Update activation layer based on autoerror and upstream error
                 if i == len(self.layers) - 2:  # Output layer

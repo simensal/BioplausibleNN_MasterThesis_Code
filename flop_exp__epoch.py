@@ -1,8 +1,9 @@
 import numpy as np
+import pandas as pd
 from pypapi import events, papi_high as high
 from ANN import ANN as ANN
 from PCN import PCN as PCN
-from helpers import get_iris_data
+from helpers import settings as Settings
 import sys
 
 def train_agent(agent, X_train, y_train, epochs, verbose, sample_interval):
@@ -43,24 +44,41 @@ def train_agent(agent, X_train, y_train, epochs, verbose, sample_interval):
 def main(argv):
     verbose = "-v" in argv or "--verbose" in argv
     save = "-s" in argv or "--save" in argv
+    normalize = "-n" in argv or "--normalize" in argv
+
+    n_agents = 10
+    if '-n_agents' in argv:
+        n_agents = int(argv[argv.index('-n_agents') + 1])
+
+    # Setting up settings for the experiment
+    dataset = argv[argv.index('-d') + 1]
+    settings = Settings(dataset)
+
+    hidden_layers = settings.hidden_layers
 
     # Loading data
-    X_train, X_test, y_train, y_test = get_iris_data()
+    X_train, X_test, y_train, y_test = settings.get_data()
 
     # Setting up ANN and PCN agent
-    anns = [ANN(X_train.shape[1], [6], y_train.shape[1]) for _ in range(10)]
-    pcns = [PCN(X_train.shape[1], [6], y_train.shape[1]) for _ in range(10)]
+    anns = [ANN(X_train.shape[1], hidden_layers, y_train.shape[1]) for _ in range(n_agents)]
+    pcns = [PCN(X_train.shape[1], hidden_layers, y_train.shape[1]) for _ in range(n_agents)]
 
     # Normalizing the dataset based on agent's scheme
-    X_train_bp = anns[0].normalize(X_train)
-    X_test_bp = anns[0].normalize(X_test)
-    X_train_pcn = pcns[0].normalize(X_train)
-    X_test_pcn = pcns[0].normalize(X_test)
+    X_train_bp = X_train
+    X_test_bp = X_test
+    X_train_pcn = X_train
+    X_test_pcn = X_test
+    if normalize:
+        # TODO: Normalize these according to new scheme (i.e. both X_train and X_test)
+        X_train_bp = anns[0].normalize(X_train)
+        X_test_bp = anns[0].normalize(X_test)
+        X_train_pcn = pcns[0].normalize(X_train)
+        X_test_pcn = pcns[0].normalize(X_test)
 
     # Setting meta-params
-    epochs = 30
+    epochs = settings.epochs
     sample_interval = np.ceil(epochs/10).astype(int)
-    dataset_name = 'Iris'
+    dataset_name = settings.dataset
 
     print(f'\nTraining {len(anns)} ANN agents and {len(pcns)} PCN agents')
     print(f'Number of epochs: {epochs}')
@@ -163,7 +181,7 @@ def main(argv):
             'pcn_test_acc': pcns_accs_test,
             'pcn_test_flops': pcns_flops_test
         })
-        df.to_csv('mCOMP__'+ dataset_name +'.csv', index=False)
+        df.to_csv('./experiments/flops/results/'+ dataset_name +'/epoch_stopping.csv', index=False)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

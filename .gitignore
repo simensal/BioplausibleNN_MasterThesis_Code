@@ -134,3 +134,7 @@ dmypy.json
 */mnist
 */yeast
 */wine
+
+# IDUN
+*.slurm
+*.out
