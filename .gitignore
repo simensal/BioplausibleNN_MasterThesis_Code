@@ -144,3 +144,7 @@ dmypy.json
 # Notebooks
 ANN*.ipynb
 PCN*.ipynb
+
+# IDUN
+*.slurm
+*.out

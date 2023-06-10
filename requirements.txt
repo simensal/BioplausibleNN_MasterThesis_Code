@@ -25,7 +25,7 @@ parso==0.8.3
 pickleshare==0.7.5
 Pillow==9.3.0
 platformdirs==2.6.0
-plyer==2.1.0
+# plyer==2.1.0
 prompt-toolkit==3.0.36
 psutil==5.9.4
 pure-eval==0.2.2
@@ -33,7 +33,7 @@ Pygments==2.13.0
 pyparsing==3.0.9
 python-dateutil==2.8.2
 pytz==2022.6
-pywin32==305
+# pywin32==305
 pyzmq==24.0.1
 six==1.16.0
 stack-data==0.6.2
