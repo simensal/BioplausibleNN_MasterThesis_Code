@@ -1,10 +1,11 @@
-from ANN import ANN
+from ANN import ANN,ANN_soft 
+from PCN import PCN
 import numpy as np
 import matplotlib.pyplot as plt
 from plyer import notification
-from helpers import get_iris_data
+from helpers import get_iris_data, tanh, der_tanh, normalize_tanh
 
-epochs = 100
+epochs = 300
 sample_interval = np.ceil(epochs / 15).astype(int)
 
 if __name__ == "__main__":
@@ -13,7 +14,7 @@ if __name__ == "__main__":
     X_train, X_test, y_train, y_test = get_iris_data()
 
     # Setting up ten agents of ANN
-    agents = [ANN(4, [6], 3, learning_rate=0.05) for _ in range(10)]
+    agents = [ANN(4, [6], 3, learning_rate=0.05, activation=tanh, der_activation=der_tanh, normalize_function=normalize_tanh) for _ in range(10)]
 
     # Training the agents
     print('Training the agents...')

@@ -148,3 +148,7 @@ PCN*.ipynb
 # IDUN
 *.slurm
 *.out
+
+# Analysis
+*\image
+experiments\inference\image\*
