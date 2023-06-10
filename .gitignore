@@ -134,3 +134,13 @@ dmypy.json
 */mnist
 */yeast
 */wine
+*/breast
+*/occupancy
+
+# Div 
+*temp.*
+*temp?.*
+
+# Notebooks
+ANN*.ipynb
+PCN*.ipynb
